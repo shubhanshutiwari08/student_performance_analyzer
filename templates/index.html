@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Performance Analyzer</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #001f3f;
+            color: white;
+        }
+        .container {
+            margin-top: 50px;
+            text-align: center;
+        }
+        .btn {
+            width: 200px;
+            height: 100px;
+            font-size: 24px;
+            margin: 10px;
+        }
+        .login-form {
+            width: 300px;
+            margin: auto;
+            margin-top: 100px;
+        }
+        .login-btn {
+            width: 100%;
+            margin-top: 20px;
+        }
+        .student-report {
+            text-align: left;
+            margin-top: 50px;
+            color: white;
+            font-size: large;/* Set font color to black */
+        }
+        .student-report th, .student-report td {
+            color: white; /* Set font color to white for table cells */
+        }
+    </style>
+    
+</head>
+<body>
+
+<div class="container">
+    <h1 class="mb-5">Student Performance Analyzer</h1>
+    
+    <!-- Student and Faculty options -->
+    <div class="row">
+        <div class="col-md-6">
+            <button class="btn btn-primary" onclick="showStudentForm()">Student</button>
+        </div>
+        <div class="col-md-6">
+            <button class="btn btn-primary" onclick="showFacultyForm()">Faculty</button>
+        </div>
+    </div>
+    
+    <!-- Student login form -->
+    <div id="studentForm" style="display: none;">
+        <form class="login-form" onsubmit="return false;">
+            <div class="form-group">
+                <input type="text" class="form-control" id="studentName" placeholder="Student Name">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" id="studentId" placeholder="Student ID">
+            </div>
+            <button type="submit" class="btn btn-primary login-btn" onclick="loginStudent()">Submit</button>
+        </form>
+    </div>
+    
+    <!-- <div id="studentForm" style="display: none;">
+        <form class="login-form" onsubmit="loginStudent(); return false;">
+            <div class="form-group">
+                <input type="text" class="form-control" id="studentName" name="student_name" placeholder="Student Name">
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" id="studentId" name="student_id" placeholder="Student ID">
+            </div>
+            <button type="submit" class="btn btn-primary login-btn">Submit</button>
+        </form>
+    </div> -->
+
+
+    <!-- Faculty login form -->
+    <div id="facultyForm" style="display: none;">
+        <form class="login-form" onsubmit="return false;">
+            <div class="form-group">
+                <input type="text" class="form-control" id="facultyUsername" placeholder="Username" value="faculty" disabled>
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" id="facultyPassword" placeholder="Password" value="12345" disabled>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" id="facultyStudentId" placeholder="Student ID">
+            </div>
+            <button type="submit" class="btn btn-primary login-btn" onclick="loginFaculty()">Submit</button>
+            <button class="btn btn-secondary login-btn" onclick="showAllStudents()">All Students</button>
+        </form>
+    </div>
+    
+    <!-- Student report -->
+    <div id="studentReport" class="student-report" style="display: none;"></div>
+</div>
+
+<script>
+    function showStudentForm() {
+        document.getElementById('studentForm').style.display = 'block';
+        document.getElementById('facultyForm').style.display = 'none';
+        document.getElementById('studentReport').style.display = 'none';
+    }
+
+    function showFacultyForm() {
+        document.getElementById('studentForm').style.display = 'none';
+        document.getElementById('facultyForm').style.display = 'block';
+        document.getElementById('studentReport').style.display = 'none';
+    }
+
+    function loginStudent() {
+        var studentName = document.getElementById('studentName').value;
+        var studentId = document.getElementById('studentId').value;
+        fetch(`/student/${studentId}`)
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('studentReport').innerHTML = data;
+            document.getElementById('studentForm').style.display = 'none';
+            document.getElementById('studentReport').style.display = 'block';
+        });
+    }
+
+    function loginFaculty() {
+        var studentId = document.getElementById('facultyStudentId').value;
+        fetch(`/student/${studentId}`)
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('studentReport').innerHTML = data;
+            document.getElementById('facultyForm').style.display = 'none';
+            document.getElementById('studentReport').style.display = 'block';
+        });
+    }
+
+    function showAllStudents() {
+        fetch(`/all`)
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('studentReport').innerHTML = data;
+            document.getElementById('facultyForm').style.display = 'none';
+            document.getElementById('studentReport').style.display = 'block';
+        });
+    }
+</script>
+
+</body>
+</html>
